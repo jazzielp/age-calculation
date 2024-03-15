@@ -1,5 +1,6 @@
 ---
 interface Props {
+    id: string,
     name: string,
     title: string,
     isRequired: boolean,
@@ -13,6 +14,7 @@ const nameUpper = name.toUpperCase()
 ---
 
 <div class="flex flex-col">
-    <label class="font-bold text-grey text-xs pb-1" for={name}>{nameUpper}</label>
+    <label class="font-bold text-grey text-xs pb-1 tracking-widest" for={name}>{nameUpper}</label>
     <input class="w-[87px] h-[54px] rounded-lg border border-line outline-purple p-3 caret-purple" placeholder={placeholder} type="number" name={name} title={title} required={isRequired} pattern={pattern} />
+    <span></span>
   </div>

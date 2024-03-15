@@ -4,27 +4,33 @@ import "@fontsource/poppins/700.css";
 import "@fontsource/poppins/400-italic.css";
 import "@fontsource/poppins/800-italic.css";
 import Input from '../components/Input.astro'
+import Arrow from '../icons/Arrow.astro'
+import Label from '../components/Label.astro'
 ---
 
 <Layout title="Welcome to Astro.">
   <main
-    class="w-[343px] h-[486px] rounded-3xl rounded-ee-[100px] bg-white px-6 py-12"
+    class="w-[343px] h-[486px] rounded-3xl rounded-ee-[100px] bg-white px-4 py-12"
   >
-    <form class="flex border-b pb-16 gap-x-4" action="#">
-		<Input name="day" title="Must be a valid day" placeholder="DD" isRequired={true} pattern='^(?:[1-9]|[12]\d|3[01])$'/>
-		<Input name="month" title="Must be a valid month" placeholder="MM" isRequired={true} pattern='^(?:[1-9]|1[0-2])$'/>
-		<Input name="year" title="Must be in the past" placeholder="YYYY" isRequired={true} pattern="^\d{4}$"/>
+    <form id="form" class="flex border-b pb-16 gap-x-4 relative" action="#">
+		<Input id="iDay" name="day" title="Must be a valid day" placeholder="DD" isRequired={true} pattern='^(?:[1-9]|[12]\d|3[01])$'/>
+		<Input id="iMonth" name="month" title="Must be a valid month" placeholder="MM" isRequired={true} pattern='^(?:[1-9]|1[0-2])$'/>
+		<Input id="iYear" name="year" title="Must be in the past" placeholder="YYYY" isRequired={true} pattern="^\d{4}$"/>
 
-		<button type="submit">
-			
+		<button class="absolute bottom-[-30px] left-[120px] size-16 grid place-content-center rounded-full bg-purple transition-colors hover:bg-black " type="submit">
+			<Arrow class="size-6"/>
 		</button>
     </form>
-    <div>
-      <p><span id="years">- -</span> years</p>
-      <p><span id="months">- -</span> months</p>
-      <p><span id="days">- -</span> days</p>
+    <div class="mt-12">
+      <Label title="years" />
+      <Label title="months" />
+      <Label title="days" />
     </div>
   </main>
 </Layout>
 
 <style></style>
+
+<script>
+
+</script>
