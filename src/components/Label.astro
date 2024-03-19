@@ -1,8 +1,7 @@
 ---
 interface Props {
-    count?: number,
     title: string
 }
-const { count, title } = Astro.props;
+const { title } = Astro.props;
 ---
-<p class="text-[56px] leading-[110%]  font-extrabold italic"><span class="text-purple" id={title}>{count ? count : '- -' }</span>{title}</p>
+<p class="text-[56px] md:text-[104px] leading-[110%]  font-extrabold italic"><span class="text-purple" id={`lbl${title}`}> -- </span> {title}</p>

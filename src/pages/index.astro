@@ -10,21 +10,21 @@ import Label from '../components/Label.astro'
 
 <Layout title="Welcome to Astro.">
   <main
-    class="w-[343px] h-[486px] rounded-3xl rounded-ee-[100px] bg-white px-4 py-12"
+    class="w-[343px] md:w-[840px] h-[486px] md:h-[680px] rounded-3xl rounded-ee-[100px] md:rounded-ee-[100px] bg-white px-4 md:px-14 py-12 md:py-14"
   >
     <form id="form" class="flex border-b pb-16 gap-x-4 relative" action="#">
-		<Input id="iDay" name="day" title="Must be a valid day" placeholder="DD" isRequired={true} pattern='^(?:[1-9]|[12]\d|3[01])$'/>
-		<Input id="iMonth" name="month" title="Must be a valid month" placeholder="MM" isRequired={true} pattern='^(?:[1-9]|1[0-2])$'/>
-		<Input id="iYear" name="year" title="Must be in the past" placeholder="YYYY" isRequired={true} pattern="^\d{4}$"/>
+		<Input id="Day" name="day" title="Must be a valid day" placeholder="DD"/>
+		<Input id="Month" name="month" title="Must be a valid month" placeholder="MM"/>
+		<Input id="Year" name="year" title="Must be in the past" placeholder="YYYY"/>
 
-		<button class="absolute bottom-[-30px] left-[120px] size-16 grid place-content-center rounded-full bg-purple transition-colors hover:bg-black " type="submit">
+		<button class="absolute bottom-[-30px] left-[120px] md:left-[670px] size-16 grid place-content-center rounded-full bg-purple transition-colors hover:bg-black " type="submit">
 			<Arrow class="size-6"/>
 		</button>
     </form>
     <div class="mt-12">
-      <Label title="years" />
-      <Label title="months" />
-      <Label title="days" />
+      <Label title="Years" />
+      <Label title="Months" />
+      <Label title="Days" />
     </div>
   </main>
 </Layout>
@@ -32,5 +32,120 @@ import Label from '../components/Label.astro'
 <style></style>
 
 <script>
+  type Age = {
+    years: number,
+    months: number,
+    days: number
+  }
+	const $inputDay = document.querySelector('#inputDay') as HTMLInputElement
+	const $inputMonth = document.querySelector('#inputMonth') as HTMLInputElement
+	const $inputYear = document.querySelector('#inputYear') as HTMLInputElement
 
+  const $labelDay = document.querySelector('#lblDay') as HTMLLabelElement
+	const $labelMonth = document.querySelector('#lblMonth') as HTMLLabelElement
+	const $labelYear = document.querySelector('#lblYear') as HTMLLabelElement
+
+  const $spanDay = document.querySelector('#spanDay') as HTMLSpanElement
+	const $spanMonth = document.querySelector('#spanMonth') as HTMLSpanElement
+	const $spanYear = document.querySelector('#spanYear') as HTMLSpanElement
+
+  const $lblDays = document.querySelector('#lblDays') as HTMLLabelElement
+  const $lblMonths = document.querySelector('#lblMonths') as HTMLLabelElement
+  const $lblYears = document.querySelector('#lblYears') as HTMLLabelElement
+
+  const regexDay = /^(0?[1-9]|[12]\d|3[01])$/
+  const regexMonth = /^(?:[1-9]|1[0-2])$/
+  const regexYear = /^\d{4}$/
+	
+	document.addEventListener("submit", (e) => {
+		e.preventDefault()
+    const checkDay = checkRedex($inputDay, $labelDay, $spanDay, regexDay )
+    const checkMonth = checkRedex($inputMonth, $labelMonth, $spanMonth, regexMonth )
+    const checkYear = checkRedex($inputYear, $labelYear, $spanYear, regexYear )
+    if (checkDay && checkMonth && checkYear) {
+      const birthDate = `${$inputYear.value}-${$inputMonth.value}-${$inputDay.value}`
+      const age = calculateAgeWithDetails(birthDate)
+      renderAge(age)
+    }
+
+	})
+
+  function checkRedex($elemntInput: HTMLInputElement, $elementLabel: HTMLLabelElement, $elementSpan: HTMLSpanElement, regex: any) {
+    if (!regex.test($elemntInput.value)) {
+			$elemntInput.classList.remove('outline-purple', 'border-line')
+			$elemntInput.classList.add('outline-red', 'border-red')
+
+      $elementLabel.classList.remove('text-grey')
+      $elementLabel.classList.add('text-red')
+
+      $elementSpan.classList.remove('hidden')
+      return false
+		} else {
+      $elemntInput.classList.add('outline-purple', 'border-line')
+			$elemntInput.classList.remove('outline-red', 'border-red')
+
+      $elementLabel.classList.add('text-grey')
+      $elementLabel.classList.remove('text-red')
+
+      $elementSpan.classList.add('hidden')
+      return true
+    }
+  }
+
+  function calculateAgeWithDetails(dateOfBirth: string) {
+  // Convert date of birth to a Date object
+  const dob = new Date(dateOfBirth);
+
+  // Get the current date
+  const currentDate = new Date();
+
+  // Calculate the difference in milliseconds between the dates
+  const difference = currentDate.getTime() - dob.getTime();
+
+  // Convert the difference from milliseconds to years
+  const ageInYears = Math.floor(difference / (1000 * 60 * 60 * 24 * 365.25));
+
+  // Calculate remaining months after years
+  let remainingMonths = currentDate.getMonth() - dob.getMonth();
+  
+  // If the birth day is later than the current day in the current month, subtract a month
+  if (dob.getDate() > currentDate.getDate()) {
+    remainingMonths--;
+  }
+  
+  // If the difference in months is negative, add 12 months
+  if (remainingMonths < 0) {
+    remainingMonths += 12;
+  }
+
+  // Calculate remaining days after years and months
+  let remainingDays = currentDate.getDate() - dob.getDate();
+  
+  // If the difference in days is negative, adjust the days and subtract a month
+  if (remainingDays < 0) {
+    // Get the number of days in the previous month
+    const lastDayOfPreviousMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0).getDate();
+    
+    // Subtract the days remaining to the day of the previous month
+    remainingDays += lastDayOfPreviousMonth;
+    
+    // Subtract a month
+    remainingMonths--;
+  }
+
+  // Return the age with details
+  return {
+    years: ageInYears,
+    months: remainingMonths,
+    days: remainingDays
+  };
+}
+
+function renderAge (age: Age) {
+  const { years, months, days } = age
+  $lblYears.innerText = years.toString()
+  $lblMonths.innerText = months.toString()
+  $lblDays.innerText = days.toString()
+
+}
 </script>

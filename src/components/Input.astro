@@ -3,18 +3,16 @@ interface Props {
     id: string,
     name: string,
     title: string,
-    isRequired: boolean,
-    pattern?: string,
     placeholder?:string
 
 }
 
-const {name, title, isRequired, pattern, placeholder} = Astro.props
+const {name, title, placeholder, id} = Astro.props
 const nameUpper = name.toUpperCase()
 ---
 
 <div class="flex flex-col">
-    <label class="font-bold text-grey text-xs pb-1 tracking-widest" for={name}>{nameUpper}</label>
-    <input class="w-[87px] h-[54px] rounded-lg border border-line outline-purple p-3 caret-purple" placeholder={placeholder} type="number" name={name} title={title} required={isRequired} pattern={pattern} />
-    <span></span>
-  </div>
+    <label id=`lbl${id}` class="font-bold text-grey text-xs md:text-sm pb-1 tracking-widest" for={name}>{nameUpper}</label>
+    <input id={`input${id}`} class="w-[87px] md:w-[160px] h-[54px] md:h-[72] rounded-lg border border-line outline-purple p-3 caret-purple text-[20px] md:text-[32px]" placeholder={placeholder} type="number" name={name} />
+    <span id=`span${id}` class="italic w-[87px] md:w-[160px] text-xs md:text-sm text-red mt-2 hidden">{title}</span>
+</div>
